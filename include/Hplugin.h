@@ -25,14 +25,14 @@ extern "C" { \
 			int iRet = 0;\
 			PROTOCOL::in  req;\
 			PROTOCOL::out resp;\
-			boss::serialize::Parser cParser(szReq,reqLen);\
+			hhp::serialize::Parser cParser(szReq,reqLen);\
 			cParser.setversion(0);\
 			try { cParser>>req; }\
 			catch ( ... ) {iRet =  0xEFFFFFFF;}\
 		if(iRet == 0) {\
 			iRet = ((_CLASS*)(p))->MOTHOED(req,resp);\
 			if(iRet<0){  } \
-			boss::serialize::Buffer cBuf;\
+			hhp::serialize::Buffer cBuf;\
 			cBuf<<resp;\
 			memcpy(szResp,cBuf.getbuf(),cBuf.length());}\  
 			return iRet;  }\			
