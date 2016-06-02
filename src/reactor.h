@@ -12,6 +12,7 @@ namespace hhp {
 			ON_READ = 0x01,  //读事件
 			ON_WRITE = 0x04, //写事件
 			ON_REEOR = 0x08, //出错
+			ON_MOD  =  0x10, //边缘触发
 		};
 
 		class CEvevtHandler
@@ -20,7 +21,9 @@ namespace hhp {
 			CEvevtHandler() :
 			m_iFd(-1)
 			{  };
-			virtual ~CEvevtHandler();
+			virtual ~CEvevtHandler() {
+				this->Close();
+			}
 			//可读
 			virtual int OnRead() = 0;
 			//可写
@@ -45,14 +48,15 @@ namespace hhp {
 		class CEventChannel 
 		{
 		public:
-			CEventChannel(int fd, int Event, CEvevtHandler *handler):
+			CEventChannel(int fd, int Event,CEvevtHandler *handler):
 				m_iFd(fd),
 				m_iEvent(Event),
-				m_iRevent(-1),
+				m_iRevent(0),
 				m_oEventHeadler(handler)
 			{
 
 			}
+			void setRevevt(int Revent) { m_iRevent = Revent; }
 			void HandleEvent() {
 				if (m_iRevent&ON_READ) {
 					m_oEventHeadler->OnRead();
@@ -113,9 +117,6 @@ namespace hhp {
 			bool m_bQuit;
 
 		};
-
-
-
 
 
 	}
